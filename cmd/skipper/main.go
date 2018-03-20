@@ -82,6 +82,7 @@ const (
 	reverseSourcePredicateUsage          = "reverse the order of finding the client IP from X-Forwarded-For header"
 	enableHopHeadersRemovalUsage         = "enables removal of Hop-Headers according to RFC-2616"
 	maxAuditBodyUsage                    = "sets the max body to read to log inthe audit log body"
+	enableSwarmUsage                     = "enable swarm communication between nodes in a skipper fleet"
 
 	// logging, metrics, tracing:
 	enablePrometheusMetricsUsage    = "siwtch to Prometheus metrics format to expose metrics. *Deprecated*: use metrics-flavour"
@@ -193,6 +194,7 @@ var (
 	predicatePlugins                pluginFlags
 	dataclientPlugins               pluginFlags
 	multiPlugins                    pluginFlags
+	enableSwarm                     bool
 
 	// logging, metrics, tracing:
 	enablePrometheusMetrics   bool
@@ -380,6 +382,7 @@ func init() {
 	flag.BoolVar(&enableDualstackBackend, "enable-dualstack-backend", true, enableDualstackBackendUsage)
 	flag.DurationVar(&tlsHandshakeTimeoutBackend, "tls-timeout-backend", defaultTLSHandshakeTimeoutBackend, tlsHandshakeTimeoutBackendUsage)
 	flag.IntVar(&maxIdleConnsBackend, "max-idle-connection-backend", defaultMaxIdleConnsBackend, maxIdleConnsBackendUsage)
+	flag.BoolVar(&enableSwarm, "enable-swarm", false, enableSwarmUsage)
 
 	flag.Parse()
 
@@ -489,6 +492,7 @@ func main() {
 		DataClientPlugins:               dataclientPlugins.Get(),
 		Plugins:                         multiPlugins.Get(),
 		PluginDirs:                      []string{skipper.DefaultPluginDir},
+		EnableSwarm:                     enableSwarm,
 
 		// logging, metrics, tracing:
 		EnablePrometheusMetrics:             enablePrometheusMetrics,
